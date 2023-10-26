@@ -1,40 +1,19 @@
-name: Node.js CI
-
+name: CI
 on:
   push:
-    branches:
-      - master
-
+    branches: [ main ]
 jobs:
-  build:
-    runs-on: self-hosted # Use the name of your self-hosted runner group here
-
+  container-test-job:
+    runs-on: self-hosted
+    container:
+      image: node:18
+      env:
+        NODE_ENV: development
+      ports:
+        - 80
+      volumes:
+        - my_docker_volume:/volume_mount
+      options: --cpus 1
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 4.2 # You can specify your desired Node.js version
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build and Test
-      run: |
-        npm run build
-        npm test
-
-    # - name: Upload test coverage
-    #   if: always() # Upload test coverage even if tests fail
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: coverage
-    #     path: coverage
-
-    # - name: Deploy to production
-    #   if: success()
-    #   run: |
-    #     # Add your deployment script or commands here
-
+      - name: Check for dockerenv file
+        run: (ls /.dockerenv && echo Found dockerenv) || (echo No dockerenv)
