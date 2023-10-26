@@ -8,5 +8,8 @@ jobs:
     container:
       image: node:18
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      
       - name: Check for dockerenv file
-        run: npm clean install
+        run: npm install
